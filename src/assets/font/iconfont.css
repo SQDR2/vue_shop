@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3519622 */
-  src: url('iconfont.woff2?t=1657699640638') format('woff2'),
-       url('iconfont.woff?t=1657699640638') format('woff'),
-       url('iconfont.ttf?t=1657699640638') format('truetype');
+  src: url('iconfont.woff2?t=1657791719320') format('woff2'),
+       url('iconfont.woff?t=1657791719320') format('woff'),
+       url('iconfont.ttf?t=1657791719320') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-caidanshujutongji:before {
+  content: "\e61d";
+}
+
+.icon-dingdanguanli:before {
+  content: "\ea61";
+}
+
+.icon-quanxianguanli:before {
+  content: "\e600";
+}
+
+.icon-shangpinguanli:before {
+  content: "\e696";
+}
+
+.icon-yonghuguanli:before {
+  content: "\e601";
 }
 
 .icon-password:before {
