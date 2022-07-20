@@ -1,13 +1,14 @@
 <template>
   <div>
     <!-- 面包屑导航栏 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
+    <BreadCrumb FirstLevel="用户管理" SecondLevel="用户列表"></BreadCrumb>
     <!-- 卡片栏 -->
-    <el-card class="box-card">
+    <el-card>
       <!-- 搜索栏 -->
       <el-row :gutter="20">
         <el-col :span="8">
@@ -45,7 +46,8 @@
               </el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="OpenAssignRole(slotProps.row)">
+              </el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -78,7 +80,7 @@
       </el-dialog>
       <!-- 修改用户对话框 -->
       <el-dialog title="修改用户信息" :visible.sync="editDialogVisible" width="40%" @close="DialogClose('edit')">
-        <el-form :model="editForm" :rules="addFormRules" ref="addFormRef" label-width="80px" class="addForm">
+        <el-form :model="editForm" :rules="addFormRules" ref="addFormRef" label-width="80px">
           <el-form-item label="用户名">
             <el-input :value="editForm.username" disabled></el-input>
           </el-form-item>
@@ -94,11 +96,29 @@
           <el-button type="primary" @click="EditUserInfo">确 定</el-button>
         </span>
       </el-dialog>
+      <!-- 分配角色对话框 -->
+      <el-dialog title="分配角色" :visible.sync="AssignRolesVisible" width="40%" @close="DialogClose('assign')">
+        <el-form :model="userInfo" ref="AssignFormRef" label-width="80px">
+          <div>
+            <p>当前用户名：{{ userInfo.username }}</p>
+            <p>当前角色：{{ userInfo.role_name }}</p>
+          </div>
+          <el-select v-model="SelectRoleId" placeholder="请选择">
+            <el-option v-for="item in rolelist" :key="item.id" :label="item.roleName" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="AssignRolesVisible = false">取 消</el-button>
+          <el-button type="primary" @click="AssignRole">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script>
+import BreadCrumb from '../Common/BreadCrumb.vue'
 export default {
   data () {
     const checKEmail = (rule, value, callback) => {
@@ -149,12 +169,23 @@ export default {
         ]
       },
       editDialogVisible: false,
-      editForm: {}
+      editForm: {},
+      // 当前用户信息
+      userInfo: {
+        username: '',
+        role_name: ''
+      },
+      AssignRolesVisible: false,
+      // 所有角色数据
+      rolelist: [],
+      // 已绑定的角色id
+      SelectRoleId: ''
     }
   },
   created () {
     this.getUserlist()
   },
+  components: { BreadCrumb },
   methods: {
     async getUserlist () {
       const { data: res } = await this.$http.get('users', { params: this.queryInfo })
@@ -192,6 +223,9 @@ export default {
         this.$refs.addFormRef.resetFields()
       } else if (flag === 'edit') {
         this.$refs.addFormRef.resetFields()
+      } else if (flag === 'assign') {
+        this.userInfo = {},
+          this.SelectRoleId = ''
       }
     },
     // 添加用户验证
@@ -227,6 +261,7 @@ export default {
         this.$message.success('修改用户信息成功')
       })
     },
+    // 删除用户
     deleteUser (id) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -242,6 +277,25 @@ export default {
         console.log(error)
         this.$message.info('取消删除操作!')
       })
+    },
+    // 打开分配角色对话框
+    async OpenAssignRole (userInfo) {
+      this.userInfo = userInfo
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        this.$message.info('获取角色列表失败！')
+      }
+      this.rolelist = res.data
+      this.AssignRolesVisible = true
+    },
+    // 确定修改角色
+    async AssignRole () {
+      if (!this.SelectRoleId) { return this.$message.error('请选择要分配的角色') }
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, { rid: this.SelectRoleId })
+      if (res.meta.status !== 200) { return this.$message.error('更新角色失败！') }
+      this.$message.success('更新角色成功！')
+      this.getUserlist()
+      this.AssignRolesVisible = false
     }
   }
 }
