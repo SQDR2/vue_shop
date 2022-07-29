@@ -7,12 +7,23 @@ body,
   padding: 0;
   min-width: 1300px;
 }
-.el-breadcrumb{
+
+.el-breadcrumb {
   margin-bottom: 10px;
 }
-.el-table{
+
+.el-table {
   margin-top: 15px;
 }
-.el-pagination{
+
+.el-pagination {
   margin-top: 10px;
+}
+
+.el-scrollbar {
+  height: 200px !important
+}
+
+.ql-editor {
+  min-height: 300px !important;
 }

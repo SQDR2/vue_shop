@@ -59,7 +59,7 @@
       </el-pagination>
       <!-- 添加用户对话框 -->
       <el-dialog title="添加用户" :visible.sync="AddDialogVisible" width="40%" @close="DialogClose('close')">
-        <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="80px" class="addForm">
+        <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="80px">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="addForm.username"></el-input>
           </el-form-item>
@@ -250,8 +250,8 @@ export default {
     },
     // 修改用户信息
     EditUserInfo () {
-      this.$refs.addFormRef.validate(async vaild => {
-        if (!vaild) { return false }
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) { return false }
         const { data: res } = await this.$http.put('users/' + this.editForm.id, { email: this.editForm.email, mobile: this.editForm.mobile })
         if (res.meta.status !== 200) { return this.$message.error('修改用户信息失败') }
         // 关闭添加用户对话框
