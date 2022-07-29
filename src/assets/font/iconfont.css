@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3519622 */
-  src: url('iconfont.woff2?t=1657791719320') format('woff2'),
-       url('iconfont.woff?t=1657791719320') format('woff'),
-       url('iconfont.ttf?t=1657791719320') format('truetype');
+  src: url('iconfont.woff2?t=1659082722450') format('woff2'),
+       url('iconfont.woff?t=1659082722450') format('woff'),
+       url('iconfont.ttf?t=1659082722450') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-wuliu:before {
+  content: "\e75f";
 }
 
 .icon-caidanshujutongji:before {
