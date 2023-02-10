@@ -45,6 +45,14 @@ export default {
       }
     }
   },
+  mounted(){
+    this.$message({
+          dangerouslyUseHTMLString: true,
+          message: `<strong>请不要随意修改该系统里面的数据 项目仅供参考靠
+            </strong><strong>前端源码：https://github.com/SQDR2/vue_shop.git</strong>
+            <strong>后端源码：</strong>`
+        });
+  },
   methods: {
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
@@ -62,7 +70,7 @@ export default {
         // 保存token
         window.sessionStorage.setItem('token', res.data.token)
         // 通过编程式导航调转到后台主页，路由地址/home
-        this.$router.push('/home')
+        this.$router.push(`/home?username=${this.loginForm.username}`)
       })
     }
   }
